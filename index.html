@@ -1,0 +1,1337 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Simulacro UBA</title>
+<style>
+  :root {
+    --bg: #ffffff;
+    --bg2: #f7f7f5;
+    --border: #e9e9e7;
+    --text: #37352f;
+    --text2: #9b9a97;
+    --blue: #2383e2;
+    --blue-light: #e8f0fd;
+    --green: #0f7b0f;
+    --green-light: #edfaed;
+    --red: #eb5757;
+    --red-light: #fdeaea;
+    --yellow: #dfab01;
+    --yellow-light: #fef9e7;
+    --radius: 8px;
+    --shadow: 0 1px 3px rgba(0,0,0,.06), 0 1px 2px rgba(0,0,0,.04);
+    --shadow-md: 0 4px 12px rgba(0,0,0,.08);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    font-size: 15px;
+    color: var(--text);
+    background: var(--bg);
+    min-height: 100vh;
+  }
+
+  /* ─── NAV ─── */
+  nav {
+    display: flex;
+    align-items: center;
+    padding: 0 24px;
+    height: 52px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .logo { font-size: 17px; font-weight: 600; letter-spacing: -.3px; }
+  .logo span { color: var(--blue); }
+  .nav-sub { color: var(--text2); font-size: 13px; margin-left: 4px; }
+
+  /* ─── SCREENS ─── */
+  .screen { display: none; }
+  .screen.active { display: block; }
+
+  /* ─── HOME ─── */
+  .home-wrap {
+    max-width: 640px;
+    margin: 64px auto;
+    padding: 0 24px;
+  }
+  .home-title {
+    font-size: 28px;
+    font-weight: 700;
+    letter-spacing: -.5px;
+    margin-bottom: 8px;
+  }
+  .home-sub {
+    color: var(--text2);
+    font-size: 15px;
+    margin-bottom: 40px;
+  }
+  .subject-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+  }
+  .subject-card {
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 28px 24px;
+    cursor: pointer;
+    transition: all .15s;
+    background: var(--bg);
+    text-align: left;
+    position: relative;
+    overflow: hidden;
+  }
+  .subject-card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: #d1d1d0;
+    transform: translateY(-1px);
+  }
+  .subject-card .icon {
+    font-size: 32px;
+    margin-bottom: 14px;
+    display: block;
+  }
+  .subject-card .materia-code {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: var(--text2);
+    margin-bottom: 4px;
+  }
+  .subject-card .materia-name {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+    letter-spacing: -.2px;
+  }
+  .subject-card .materia-info {
+    font-size: 13px;
+    color: var(--text2);
+  }
+  .subject-card.ipc { border-top: 3px solid #6366f1; }
+  .subject-card.icse { border-top: 3px solid #0ea5e9; }
+  .card-badge {
+    position: absolute;
+    top: 14px; right: 14px;
+    background: var(--bg2);
+    border-radius: 20px;
+    padding: 3px 10px;
+    font-size: 12px;
+    color: var(--text2);
+    font-weight: 500;
+  }
+
+  /* ─── TEMA SELECTION ─── */
+  .tema-wrap {
+    max-width: 560px;
+    margin: 48px auto;
+    padding: 0 24px;
+  }
+  .back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: var(--text2);
+    cursor: pointer;
+    margin-bottom: 28px;
+    padding: 4px 0;
+    border: none;
+    background: none;
+  }
+  .back-btn:hover { color: var(--text); }
+  .section-title {
+    font-size: 22px;
+    font-weight: 700;
+    letter-spacing: -.4px;
+    margin-bottom: 6px;
+  }
+  .section-sub {
+    color: var(--text2);
+    font-size: 14px;
+    margin-bottom: 28px;
+  }
+  .tema-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  .tema-btn {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 8px;
+    text-align: center;
+    cursor: pointer;
+    font-size: 13px;
+    color: var(--text2);
+    transition: all .12s;
+    background: var(--bg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .tema-btn:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: var(--blue-light);
+  }
+  .tema-btn .tema-num { font-size: 20px; font-weight: 700; color: var(--text); }
+  .tema-btn:hover .tema-num { color: var(--blue); }
+  .random-btn {
+    width: 100%;
+    padding: 14px;
+    border: 1.5px dashed var(--border);
+    border-radius: var(--radius);
+    background: none;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text2);
+    transition: all .12s;
+    margin-top: 4px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+  }
+  .random-btn:hover {
+    border-color: var(--blue);
+    color: var(--blue);
+    background: var(--blue-light);
+  }
+
+  /* ─── EXAM ─── */
+  .exam-wrap {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 24px 24px 80px;
+  }
+  .exam-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 24px;
+  }
+  .exam-meta {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .exam-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .7px;
+    color: var(--text2);
+  }
+  .timer {
+    font-size: 13px;
+    color: var(--text2);
+    font-variant-numeric: tabular-nums;
+  }
+  .progress-bar-wrap {
+    height: 4px;
+    background: var(--bg2);
+    border-radius: 4px;
+    margin-bottom: 32px;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: var(--blue);
+    border-radius: 4px;
+    transition: width .3s ease;
+  }
+  .q-counter {
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .8px;
+    color: var(--text2);
+    margin-bottom: 12px;
+  }
+  .q-text {
+    font-size: 16px;
+    line-height: 1.65;
+    margin-bottom: 28px;
+    white-space: pre-line;
+  }
+  .q-text strong { font-weight: 600; }
+
+  /* Compound question parts */
+  .compound-part {
+    margin-bottom: 24px;
+  }
+  .compound-label {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text2);
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    margin-bottom: 12px;
+  }
+
+  /* ─── OPTIONS ─── */
+  .options-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 32px;
+  }
+  .option-card {
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    padding: 14px 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    transition: all .12s;
+    background: var(--bg);
+    text-align: left;
+    width: 100%;
+  }
+  .option-card:hover:not(.disabled) {
+    border-color: var(--blue);
+    background: var(--blue-light);
+  }
+  .option-card.selected {
+    border-color: var(--blue);
+    background: var(--blue-light);
+  }
+  .option-card.correct {
+    border-color: var(--green);
+    background: var(--green-light);
+  }
+  .option-card.incorrect {
+    border-color: var(--red);
+    background: var(--red-light);
+  }
+  .option-card.show-correct {
+    border-color: var(--green);
+    background: var(--green-light);
+  }
+  .option-card.disabled { cursor: default; }
+  .opt-badge {
+    min-width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: var(--bg2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text2);
+    flex-shrink: 0;
+    transition: all .12s;
+  }
+  .option-card.selected .opt-badge {
+    background: var(--blue);
+    color: white;
+  }
+  .option-card.correct .opt-badge {
+    background: var(--green);
+    color: white;
+  }
+  .option-card.incorrect .opt-badge {
+    background: var(--red);
+    color: white;
+  }
+  .option-card.show-correct .opt-badge {
+    background: var(--green);
+    color: white;
+  }
+  .opt-text {
+    font-size: 14.5px;
+    line-height: 1.55;
+    padding-top: 3px;
+  }
+
+  /* YesNo buttons */
+  .yesno-grid { display: flex; gap: 8px; margin-bottom: 8px; }
+  .yesno-btn {
+    flex: 1;
+    padding: 12px;
+    border: 1.5px solid var(--border);
+    border-radius: var(--radius);
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: all .12s;
+    background: var(--bg);
+  }
+  .yesno-btn:hover:not(.disabled) { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .yesno-btn.selected { border-color: var(--blue); background: var(--blue-light); color: var(--blue); }
+  .yesno-btn.correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+  .yesno-btn.incorrect { border-color: var(--red); background: var(--red-light); color: var(--red); }
+  .yesno-btn.show-correct { border-color: var(--green); background: var(--green-light); color: var(--green); }
+
+  /* Nav buttons */
+  .exam-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 12px;
+  }
+  .btn {
+    padding: 10px 22px;
+    border-radius: var(--radius);
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all .12s;
+    border: none;
+  }
+  .btn-primary {
+    background: var(--blue);
+    color: white;
+  }
+  .btn-primary:hover { background: #1a6fc4; }
+  .btn-primary:disabled { opacity: .5; cursor: not-allowed; }
+  .btn-outline {
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--text);
+  }
+  .btn-outline:hover { border-color: #ccc; background: var(--bg2); }
+  .btn-danger {
+    background: none;
+    border: 1.5px solid var(--border);
+    color: var(--text2);
+    font-size: 13px;
+  }
+  .btn-danger:hover { border-color: var(--red); color: var(--red); }
+  .btn-success {
+    background: #0e7a0e;
+    color: white;
+    font-size: 15px;
+    padding: 12px 28px;
+  }
+  .btn-success:hover { background: #0a5e0a; }
+
+  /* ─── RESULTS ─── */
+  .results-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .score-card {
+    background: var(--bg2);
+    border-radius: 16px;
+    padding: 32px;
+    text-align: center;
+    margin-bottom: 28px;
+  }
+  .score-big {
+    font-size: 64px;
+    font-weight: 800;
+    letter-spacing: -2px;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+  .score-big.high { color: var(--green); }
+  .score-big.mid { color: var(--yellow); }
+  .score-big.low { color: var(--red); }
+  .score-label { font-size: 16px; color: var(--text2); margin-bottom: 24px; }
+  .score-stats {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+  }
+  .stat-item { text-align: center; }
+  .stat-num { font-size: 22px; font-weight: 700; }
+  .stat-label { font-size: 12px; color: var(--text2); text-transform: uppercase; letter-spacing: .5px; }
+  .stat-item.green .stat-num { color: var(--green); }
+  .stat-item.red .stat-num { color: var(--red); }
+
+  .results-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 16px;
+    letter-spacing: -.3px;
+  }
+  .result-row {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 8px;
+    display: flex;
+    gap: 14px;
+    align-items: flex-start;
+  }
+  .result-row.ok { border-left: 3px solid var(--green); }
+  .result-row.fail { border-left: 3px solid var(--red); }
+  .result-icon { font-size: 16px; flex-shrink: 0; margin-top: 2px; }
+  .result-content {}
+  .result-q { font-size: 13.5px; line-height: 1.5; margin-bottom: 6px; }
+  .result-answers { font-size: 12.5px; color: var(--text2); }
+  .result-answers .ok-ans { color: var(--green); font-weight: 600; }
+  .result-answers .bad-ans { color: var(--red); text-decoration: line-through; }
+
+  .results-actions {
+    display: flex;
+    gap: 12px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+  }
+
+  /* Save status */
+  .save-status {
+    font-size: 13px;
+    color: var(--text2);
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 16px;
+  }
+  .save-status.ok { color: var(--green); }
+  .save-status.err { color: var(--red); }
+
+  /* ─── HISTORY ─── */
+  .history-wrap {
+    max-width: 640px;
+    margin: 0 auto;
+    padding: 32px 24px 80px;
+  }
+  .history-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  .history-table th {
+    text-align: left;
+    padding: 8px 12px;
+    color: var(--text2);
+    font-weight: 600;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: .6px;
+    border-bottom: 1px solid var(--border);
+  }
+  .history-table td {
+    padding: 10px 12px;
+    border-bottom: 1px solid var(--border);
+  }
+  .pct-chip {
+    display: inline-block;
+    padding: 2px 9px;
+    border-radius: 20px;
+    font-size: 12px;
+    font-weight: 600;
+  }
+  .pct-chip.high { background: var(--green-light); color: var(--green); }
+  .pct-chip.mid { background: var(--yellow-light); color: var(--yellow); }
+  .pct-chip.low { background: var(--red-light); color: var(--red); }
+  .empty-state {
+    text-align: center;
+    padding: 48px 24px;
+    color: var(--text2);
+  }
+  .empty-state .icon { font-size: 40px; margin-bottom: 12px; }
+  .empty-state p { font-size: 15px; }
+
+  /* Spinner */
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid var(--border);
+    border-top-color: var(--blue);
+    border-radius: 50%;
+    animation: spin .6s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+
+  /* Toast */
+  .toast {
+    position: fixed;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%) translateY(80px);
+    background: #37352f;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    z-index: 999;
+    transition: transform .25s ease;
+    pointer-events: none;
+  }
+  .toast.show { transform: translateX(-50%) translateY(0); }
+
+  @media (max-width: 520px) {
+    .subject-cards { grid-template-columns: 1fr; }
+    .score-stats { gap: 20px; }
+    .score-big { font-size: 48px; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="logo">Simulacro <span>UBA</span></div>
+  <div class="nav-sub">2do Parcial · 2025</div>
+  <div style="flex:1"></div>
+  <button class="btn btn-outline" onclick="showHistory()" style="font-size:13px;padding:7px 14px">Ver historial</button>
+</nav>
+
+<!-- HOME -->
+<div id="screen-home" class="screen active">
+  <div class="home-wrap">
+    <div class="home-title">¿Qué materia practicás hoy?</div>
+    <div class="home-sub">Seleccioná un examen y elegí el tema. Cada simulacro tiene las mismas preguntas que el parcial real.</div>
+    <div class="subject-cards">
+      <div class="subject-card ipc" onclick="selectSubject('IPC')">
+        <div class="card-badge">8 temas</div>
+        <span class="icon">🔬</span>
+        <div class="materia-code">IPC · (40)</div>
+        <div class="materia-name">Intro al Pensamiento Científico</div>
+        <div class="materia-info">10 ejercicios · Cátedra Buacar</div>
+      </div>
+      <div class="subject-card icse" onclick="selectSubject('ICSE')">
+        <div class="card-badge">10 temas</div>
+        <span class="icon">🏛️</span>
+        <div class="materia-code">ICSE · (24)</div>
+        <div class="materia-name">Intro al Conocimiento de la Sociedad</div>
+        <div class="materia-info">18 preguntas · Cátedra Pedrosa</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- TEMA SELECTION -->
+<div id="screen-temas" class="screen">
+  <div class="tema-wrap">
+    <button class="back-btn" onclick="goHome()">← Volver</button>
+    <div class="section-title" id="tema-title"></div>
+    <div class="section-sub" id="tema-sub"></div>
+    <div class="tema-grid" id="tema-grid"></div>
+    <button class="random-btn" onclick="startRandomTema()">
+      <span>🎲</span> Tema aleatorio
+    </button>
+  </div>
+</div>
+
+<!-- EXAM -->
+<div id="screen-exam" class="screen">
+  <div class="exam-wrap">
+    <div class="exam-header">
+      <div class="exam-meta">
+        <span class="exam-badge" id="exam-badge"></span>
+        <span class="timer" id="timer">0:00</span>
+      </div>
+      <button class="btn btn-danger" onclick="exitExam()">Salir</button>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar" id="progress-bar" style="width:0%"></div>
+    </div>
+    <div class="q-counter" id="q-counter"></div>
+    <div id="question-area"></div>
+    <div class="exam-nav">
+      <button class="btn btn-outline" id="btn-prev" onclick="prevQuestion()">← Anterior</button>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span id="unanswered-label" style="font-size:13px;color:var(--text2)"></span>
+        <button class="btn btn-primary" id="btn-next" onclick="nextOrSubmit()">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- RESULTS -->
+<div id="screen-results" class="screen">
+  <div class="results-wrap">
+    <button class="back-btn" onclick="goHome()">← Inicio</button>
+    <div class="score-card">
+      <div class="score-big" id="score-big"></div>
+      <div class="score-label" id="score-label"></div>
+      <div class="score-stats">
+        <div class="stat-item green">
+          <div class="stat-num" id="stat-correct"></div>
+          <div class="stat-label">Correctas</div>
+        </div>
+        <div class="stat-item red">
+          <div class="stat-num" id="stat-incorrect"></div>
+          <div class="stat-label">Incorrectas</div>
+        </div>
+        <div class="stat-item">
+          <div class="stat-num" id="stat-total"></div>
+          <div class="stat-label">Preguntas</div>
+        </div>
+      </div>
+    </div>
+    <div class="results-title">Revisión detallada</div>
+    <div id="results-detail"></div>
+    <div class="save-status" id="save-status"></div>
+    <div class="results-actions">
+      <button class="btn btn-success" onclick="replayTema()">🔄 Repetir este tema</button>
+      <button class="btn btn-outline" onclick="goHome()">Elegir otro tema</button>
+    </div>
+  </div>
+</div>
+
+<!-- HISTORY -->
+<div id="screen-history" class="screen">
+  <div class="history-wrap">
+    <button class="back-btn" onclick="goHome()">← Volver</button>
+    <div class="section-title">Historial de simulacros</div>
+    <div class="section-sub">Tus últimos resultados guardados</div>
+    <div id="history-content"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="exam_data.js"></script>
+<script>
+// ═══════════════════════════════════════════════════════
+// SUPABASE CONFIG
+// ═══════════════════════════════════════════════════════
+const SUPA_URL = 'https://uzrxokkmjkkgxjnfjgsa.supabase.co';
+const SUPA_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InV6cnhva2ttamtrZ3hqbmZqZ3NhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk1Nzk5MzcsImV4cCI6MjA5NTE1NTkzN30.nQIj_VzURwIY2ww5jnt2GbhgpU0UCGdd-d-wb-V_ulk';
+
+async function saveResult(data) {
+  const r = await fetch(`${SUPA_URL}/rest/v1/exam_results`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPA_KEY,
+      'Authorization': 'Bearer ' + SUPA_KEY,
+      'Prefer': 'return=minimal'
+    },
+    body: JSON.stringify(data)
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+}
+
+async function fetchHistory() {
+  const r = await fetch(`${SUPA_URL}/rest/v1/exam_results?order=fecha.desc&limit=50`, {
+    headers: { 'apikey': SUPA_KEY, 'Authorization': 'Bearer ' + SUPA_KEY }
+  });
+  if (!r.ok) throw new Error('HTTP ' + r.status);
+  return r.json();
+}
+
+// ═══════════════════════════════════════════════════════
+// STATE
+// ═══════════════════════════════════════════════════════
+let currentSubject = null;  // 'IPC' | 'ICSE'
+let currentTema = null;
+let questions = [];         // array of question objects
+let answers = {};           // { qIndex: answer }
+let currentQ = 0;
+let timerInterval = null;
+let startTime = null;
+let isChecked = false;
+let lastTema = null;
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById('screen-' + id).classList.add('active');
+}
+
+function goHome() {
+  stopTimer();
+  showScreen('home');
+}
+
+function showHistory() {
+  showScreen('history');
+  loadHistory();
+}
+
+// ═══════════════════════════════════════════════════════
+// SUBJECT + TEMA SELECTION
+// ═══════════════════════════════════════════════════════
+function selectSubject(subject) {
+  currentSubject = subject;
+  const data = subject === 'IPC' ? IPC_DATA : ICSE_DATA;
+  const temas = Object.keys(data).map(Number).sort((a,b)=>a-b);
+  const qCount = subject === 'IPC' ? '10 ejercicios' : '18 preguntas';
+  const name = subject === 'IPC' ? 'Pensamiento Científico' : 'Sociedad y Estado';
+
+  document.getElementById('tema-title').textContent = name;
+  document.getElementById('tema-sub').textContent = `Elegí un tema para practicar · ${qCount} por tema`;
+
+  const grid = document.getElementById('tema-grid');
+  grid.innerHTML = temas.map(t => `
+    <button class="tema-btn" onclick="startTema(${t})">
+      <div class="tema-num">${t}</div>
+      <div>Tema ${t}</div>
+    </button>
+  `).join('');
+
+  showScreen('temas');
+}
+
+function startRandomTema() {
+  const data = currentSubject === 'IPC' ? IPC_DATA : ICSE_DATA;
+  const temas = Object.keys(data).map(Number);
+  const t = temas[Math.floor(Math.random() * temas.length)];
+  startTema(t);
+}
+
+function startTema(tema) {
+  currentTema = tema;
+  lastTema = tema;
+  const data = currentSubject === 'IPC' ? IPC_DATA : ICSE_DATA;
+  const temaData = data[String(tema)];
+
+  if (currentSubject === 'IPC') {
+    questions = buildIPCQuestions(temaData);
+  } else {
+    questions = buildICSEQuestions(temaData);
+  }
+
+  answers = {};
+  currentQ = 0;
+  isChecked = false;
+
+  startTimer();
+  showScreen('exam');
+  renderExam();
+}
+
+function replayTema() {
+  startTema(lastTema);
+}
+
+// ═══════════════════════════════════════════════════════
+// QUESTION BUILDERS
+// ═══════════════════════════════════════════════════════
+function buildIPCQuestions(temaData) {
+  return temaData.exercises.map(ex => {
+    if (ex.is_compound) {
+      return { type: 'ipc-compound', ex };
+    }
+    return { type: 'ipc-single', ex };
+  });
+}
+
+function buildICSEQuestions(temaData) {
+  return temaData.questions.map(q => ({
+    type: 'icse',
+    q
+  }));
+}
+
+// ═══════════════════════════════════════════════════════
+// EXAM RENDERING
+// ═══════════════════════════════════════════════════════
+function renderExam() {
+  const total = questions.length;
+  const pct = ((currentQ + 1) / total) * 100;
+
+  document.getElementById('exam-badge').textContent =
+    `${currentSubject} · Tema ${currentTema}`;
+  document.getElementById('progress-bar').style.width = pct + '%';
+  document.getElementById('q-counter').textContent =
+    `Pregunta ${currentQ + 1} de ${total}`;
+
+  document.getElementById('btn-prev').style.visibility = currentQ > 0 ? 'visible' : 'hidden';
+
+  const isLast = currentQ === total - 1;
+  const btn = document.getElementById('btn-next');
+  btn.textContent = isLast ? (isChecked ? 'Ver resultados' : 'Comprobar examen') : 'Siguiente →';
+  btn.style.background = isLast && !isChecked ? '#0e7a0e' : '';
+  btn.style.color = isLast && !isChecked ? 'white' : '';
+
+  const q = questions[currentQ];
+  renderQuestion(q);
+  updateUnansweredLabel();
+}
+
+function updateUnansweredLabel() {
+  if (isChecked) { document.getElementById('unanswered-label').textContent = ''; return; }
+  const unanswered = questions.filter((_, i) => !isAnswered(i)).length;
+  const el = document.getElementById('unanswered-label');
+  if (unanswered > 0 && currentQ === questions.length - 1) {
+    el.textContent = `${unanswered} sin responder`;
+  } else {
+    el.textContent = '';
+  }
+}
+
+function isAnswered(idx) {
+  const q = questions[idx];
+  if (q.type === 'ipc-compound') {
+    const k = 'q' + idx;
+    const ans = answers[k] || {};
+    if (q.ex.num === 4) return ans.part_a !== undefined && ans.part_b !== undefined;
+    if (q.ex.num === 5) return ans.part_l !== undefined && ans.part_ca !== undefined;
+  }
+  return answers['q' + idx] !== undefined;
+}
+
+function renderQuestion(q) {
+  const area = document.getElementById('question-area');
+
+  if (q.type === 'ipc-single') {
+    area.innerHTML = renderIPCSingle(q.ex, 'q' + currentQ);
+  } else if (q.type === 'ipc-compound') {
+    area.innerHTML = renderIPCCompound(q.ex, 'q' + currentQ);
+  } else {
+    area.innerHTML = renderICSE(q.q, 'q' + currentQ);
+  }
+
+  restoreAnswers(currentQ);
+  if (isChecked) applyCheckStyles(currentQ);
+}
+
+function renderIPCSingle(ex, key) {
+  const opts = ex.options.map((o, i) => `
+    <button class="option-card" id="${key}_opt_${o.num}" onclick="selectOption('${key}', '${o.num}', this)">
+      <div class="opt-badge">${o.num}</div>
+      <div class="opt-text">${escHtml(o.text)}</div>
+    </button>
+  `).join('');
+
+  return `
+    <div class="q-text">${formatQuestion(ex.question)}</div>
+    <div class="options-grid">${opts}</div>
+  `;
+}
+
+function renderIPCCompound(ex, key) {
+  if (ex.num === 4) {
+    // Part A: Sí/No, Part B: multiple choice
+    const opts = ex.options.map(o => `
+      <button class="option-card" id="${key}_optb_${o.num}" onclick="selectCompoundB('${key}', '${o.num}', this)">
+        <div class="opt-badge">${o.num}</div>
+        <div class="opt-text">${escHtml(o.text)}</div>
+      </button>
+    `).join('');
+
+    return `
+      <div class="q-text">${formatQuestion(ex.question)}</div>
+      <div class="compound-part">
+        <div class="compound-label">Parte A — ¿Pertenece al ámbito de la ciencia empírica?</div>
+        <div class="yesno-grid">
+          <button class="yesno-btn" id="${key}_a_si" onclick="selectCompoundA('${key}', 'Si', this)">Sí</button>
+          <button class="yesno-btn" id="${key}_a_no" onclick="selectCompoundA('${key}', 'No', this)">No</button>
+        </div>
+      </div>
+      <div class="compound-part">
+        <div class="compound-label">Parte B — Justificación</div>
+        <div class="options-grid">${opts}</div>
+      </div>
+    `;
+  } else {
+    // Ex 5: select L and CA from same option list
+    const optsL = ex.options.map(o => `
+      <button class="option-card" id="${key}_optl_${o.num}" onclick="selectCompoundL('${key}', '${o.num}', this)">
+        <div class="opt-badge">${o.num}</div>
+        <div class="opt-text">${escHtml(o.text)}</div>
+      </button>
+    `).join('');
+    const optsCA = ex.options.map(o => `
+      <button class="option-card" id="${key}_optca_${o.num}" onclick="selectCompoundCA('${key}', '${o.num}', this)">
+        <div class="opt-badge">${o.num}</div>
+        <div class="opt-text">${escHtml(o.text)}</div>
+      </button>
+    `).join('');
+
+    return `
+      <div class="q-text">${formatQuestion(ex.question)}</div>
+      <div class="compound-part">
+        <div class="compound-label">Ley (L)</div>
+        <div class="options-grid">${optsL}</div>
+      </div>
+      <div class="compound-part">
+        <div class="compound-label">Condición Antecedente (CA)</div>
+        <div class="options-grid">${optsCA}</div>
+      </div>
+    `;
+  }
+}
+
+function renderICSE(q, key) {
+  const opts = q.options.map(o => `
+    <button class="option-card" id="${key}_opt_${o.letter}" onclick="selectOption('${key}', '${o.letter}', this)">
+      <div class="opt-badge">${o.letter}</div>
+      <div class="opt-text">${escHtml(o.text)}</div>
+    </button>
+  `).join('');
+
+  const pts = q.num <= 16 ? '0,5 pts' : '1 pt';
+  return `
+    <div class="q-text">${formatQuestion(q.question)} <span style="color:var(--text2);font-size:13px">(${pts})</span></div>
+    <div class="options-grid">${opts}</div>
+  `;
+}
+
+// ═══════════════════════════════════════════════════════
+// ANSWER SELECTION
+// ═══════════════════════════════════════════════════════
+function selectOption(key, val, el) {
+  if (isChecked) return;
+  // Deselect others in same group
+  document.querySelectorAll(`[id^="${key}_opt_"]`).forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  el.querySelector('.opt-badge').style.background = '';
+  answers[key] = val;
+  updateUnansweredLabel();
+}
+
+function selectCompoundA(key, val, el) {
+  if (isChecked) return;
+  document.querySelectorAll(`[id^="${key}_a_"]`).forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  if (!answers[key]) answers[key] = {};
+  answers[key].part_a = val;
+  updateUnansweredLabel();
+}
+
+function selectCompoundB(key, val, el) {
+  if (isChecked) return;
+  document.querySelectorAll(`[id^="${key}_optb_"]`).forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  if (!answers[key]) answers[key] = {};
+  answers[key].part_b = val;
+  updateUnansweredLabel();
+}
+
+function selectCompoundL(key, val, el) {
+  if (isChecked) return;
+  document.querySelectorAll(`[id^="${key}_optl_"]`).forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  if (!answers[key]) answers[key] = {};
+  answers[key].part_l = val;
+  updateUnansweredLabel();
+}
+
+function selectCompoundCA(key, val, el) {
+  if (isChecked) return;
+  document.querySelectorAll(`[id^="${key}_optca_"]`).forEach(b => b.classList.remove('selected'));
+  el.classList.add('selected');
+  if (!answers[key]) answers[key] = {};
+  answers[key].part_ca = val;
+  updateUnansweredLabel();
+}
+
+function restoreAnswers(idx) {
+  const q = questions[idx];
+  const key = 'q' + idx;
+  const ans = answers[key];
+  if (!ans) return;
+
+  if (q.type === 'ipc-compound') {
+    if (q.ex.num === 4) {
+      if (ans.part_a) {
+        const aEl = document.getElementById(`${key}_a_${ans.part_a === 'Si' ? 'si' : 'no'}`);
+        if (aEl) aEl.classList.add('selected');
+      }
+      if (ans.part_b) {
+        const bEl = document.getElementById(`${key}_optb_${ans.part_b}`);
+        if (bEl) bEl.classList.add('selected');
+      }
+    } else {
+      if (ans.part_l) {
+        const lEl = document.getElementById(`${key}_optl_${ans.part_l}`);
+        if (lEl) lEl.classList.add('selected');
+      }
+      if (ans.part_ca) {
+        const caEl = document.getElementById(`${key}_optca_${ans.part_ca}`);
+        if (caEl) caEl.classList.add('selected');
+      }
+    }
+  } else if (typeof ans === 'string') {
+    const el = document.getElementById(`${key}_opt_${ans}`);
+    if (el) el.classList.add('selected');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// NAVIGATION
+// ═══════════════════════════════════════════════════════
+function prevQuestion() {
+  if (currentQ > 0) { currentQ--; renderExam(); }
+}
+
+function nextOrSubmit() {
+  const isLast = currentQ === questions.length - 1;
+  if (!isLast) {
+    currentQ++;
+    renderExam();
+  } else if (!isChecked) {
+    checkExam();
+  } else {
+    showResults();
+  }
+}
+
+function exitExam() {
+  if (confirm('¿Salir del simulacro? Se perderá tu progreso.')) {
+    stopTimer();
+    goHome();
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// CHECK + SCORE
+// ═══════════════════════════════════════════════════════
+function getCorrectAnswer(q, idx) {
+  if (q.type === 'ipc-single') return q.ex.correct;
+  if (q.type === 'ipc-compound') {
+    const parts = q.ex.correct.split('|');
+    if (q.ex.num === 4) return { part_a: parts[0], part_b: parts[1] };
+    if (q.ex.num === 5) return { part_l: parts[0], part_ca: parts[1] };
+  }
+  if (q.type === 'icse') return q.q.correct;
+  return null;
+}
+
+function isCorrect(q, idx) {
+  const ans = answers['q' + idx];
+  const correct = getCorrectAnswer(q, idx);
+  if (!ans || !correct) return false;
+
+  if (q.type === 'ipc-compound') {
+    if (q.ex.num === 4) return ans.part_a === correct.part_a && ans.part_b === correct.part_b;
+    if (q.ex.num === 5) return ans.part_l === correct.part_l && ans.part_ca === correct.part_ca;
+  }
+  return ans === correct;
+}
+
+function checkExam() {
+  isChecked = true;
+  stopTimer();
+  document.getElementById('unanswered-label').textContent = '';
+  renderExam();
+}
+
+function applyCheckStyles(idx) {
+  const q = questions[idx];
+  const key = 'q' + idx;
+  const correct = getCorrectAnswer(q, idx);
+  const ans = answers[key];
+
+  if (q.type === 'ipc-single' || q.type === 'icse') {
+    document.querySelectorAll(`[id^="${key}_opt_"]`).forEach(btn => {
+      btn.classList.add('disabled');
+      const optVal = btn.id.split('_opt_')[1];
+      if (optVal === String(correct)) btn.classList.add('show-correct');
+      else if (optVal === String(ans)) btn.classList.add('incorrect');
+    });
+  } else if (q.type === 'ipc-compound') {
+    if (q.ex.num === 4) {
+      ['si','no'].forEach(v => {
+        const btn = document.getElementById(`${key}_a_${v}`);
+        if (!btn) return;
+        btn.classList.add('disabled');
+        const btnVal = v === 'si' ? 'Si' : 'No';
+        if (btnVal === correct.part_a) btn.classList.add('show-correct');
+        else if (ans && ans.part_a === btnVal) btn.classList.add('incorrect');
+      });
+      document.querySelectorAll(`[id^="${key}_optb_"]`).forEach(btn => {
+        btn.classList.add('disabled');
+        const optVal = btn.id.split('_optb_')[1];
+        if (optVal === correct.part_b) btn.classList.add('show-correct');
+        else if (ans && ans.part_b === optVal) btn.classList.add('incorrect');
+      });
+    } else {
+      document.querySelectorAll(`[id^="${key}_optl_"]`).forEach(btn => {
+        btn.classList.add('disabled');
+        const optVal = btn.id.split('_optl_')[1];
+        if (optVal === correct.part_l) btn.classList.add('show-correct');
+        else if (ans && ans.part_l === optVal) btn.classList.add('incorrect');
+      });
+      document.querySelectorAll(`[id^="${key}_optca_"]`).forEach(btn => {
+        btn.classList.add('disabled');
+        const optVal = btn.id.split('_optca_')[1];
+        if (optVal === correct.part_ca) btn.classList.add('show-correct');
+        else if (ans && ans.part_ca === optVal) btn.classList.add('incorrect');
+      });
+    }
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// RESULTS
+// ═══════════════════════════════════════════════════════
+function showResults() {
+  stopTimer();
+  const total = questions.length;
+  const correct = questions.filter((q, i) => isCorrect(q, i)).length;
+  const pct = Math.round((correct / total) * 100);
+  const elapsed = Math.floor((Date.now() - startTime) / 1000);
+
+  // Score big
+  const scoreEl = document.getElementById('score-big');
+  scoreEl.textContent = pct + '%';
+  scoreEl.className = 'score-big ' + (pct >= 70 ? 'high' : pct >= 50 ? 'mid' : 'low');
+
+  document.getElementById('score-label').textContent =
+    pct >= 70 ? '¡Excelente trabajo! Estás listo para el parcial.' :
+    pct >= 50 ? 'Bien, pero podés mejorar. ¡Seguí practicando!' :
+    'Necesitás repasar más. ¡No te rindas!';
+
+  document.getElementById('stat-correct').textContent = correct;
+  document.getElementById('stat-incorrect').textContent = total - correct;
+  document.getElementById('stat-total').textContent = total;
+
+  // Detail
+  const detail = document.getElementById('results-detail');
+  detail.innerHTML = questions.map((q, i) => {
+    const ok = isCorrect(q, i);
+    const ans = answers['q' + i];
+    const correctAns = getCorrectAnswer(q, i);
+    let qText = '';
+    let userAnsText = '';
+    let correctAnsText = '';
+
+    if (q.type === 'ipc-single') {
+      qText = `Ej. ${q.ex.num}: ${truncate(q.ex.question, 100)}`;
+      userAnsText = ans ? `Tu respuesta: ${ans}` : 'Sin responder';
+      correctAnsText = `Correcta: ${correctAns}`;
+    } else if (q.type === 'ipc-compound') {
+      qText = `Ej. ${q.ex.num}: ${truncate(q.ex.question, 100)}`;
+      if (q.ex.num === 4) {
+        userAnsText = ans ? `A: ${ans.part_a || '?'} / B: ${ans.part_b || '?'}` : 'Sin responder';
+        correctAnsText = `Correcta: A=${correctAns.part_a} / B=${correctAns.part_b}`;
+      } else {
+        userAnsText = ans ? `L: ${ans.part_l || '?'} / CA: ${ans.part_ca || '?'}` : 'Sin responder';
+        correctAnsText = `Correcta: L=${correctAns.part_l} / CA=${correctAns.part_ca}`;
+      }
+    } else {
+      qText = `P. ${q.q.num}: ${truncate(q.q.question, 100)}`;
+      userAnsText = ans ? `Tu respuesta: ${ans}` : 'Sin responder';
+      correctAnsText = `Correcta: ${correctAns}`;
+    }
+
+    return `
+      <div class="result-row ${ok ? 'ok' : 'fail'}">
+        <div class="result-icon">${ok ? '✅' : '❌'}</div>
+        <div class="result-content">
+          <div class="result-q">${escHtml(qText)}</div>
+          <div class="result-answers">
+            ${ok ? `<span class="ok-ans">${escHtml(correctAnsText)}</span>` :
+              `<span class="bad-ans">${escHtml(userAnsText)}</span> · <span class="ok-ans">${escHtml(correctAnsText)}</span>`}
+          </div>
+        </div>
+      </div>
+    `;
+  }).join('');
+
+  showScreen('results');
+
+  // Save to Supabase
+  const saveEl = document.getElementById('save-status');
+  saveEl.innerHTML = '<div class="spinner"></div> Guardando resultado...';
+  saveEl.className = 'save-status';
+
+  const payload = {
+    materia: currentSubject,
+    tema: currentTema,
+    score: correct,
+    total,
+    respuestas: answers,
+    tiempo_segundos: elapsed
+  };
+
+  saveResult(payload)
+    .then(() => {
+      saveEl.innerHTML = '✓ Resultado guardado en tu historial';
+      saveEl.className = 'save-status ok';
+    })
+    .catch(() => {
+      saveEl.innerHTML = '⚠ No se pudo guardar (sin conexión)';
+      saveEl.className = 'save-status err';
+    });
+}
+
+// ═══════════════════════════════════════════════════════
+// HISTORY
+// ═══════════════════════════════════════════════════════
+async function loadHistory() {
+  const el = document.getElementById('history-content');
+  el.innerHTML = '<div class="empty-state"><div class="spinner"></div></div>';
+  try {
+    const rows = await fetchHistory();
+    if (!rows.length) {
+      el.innerHTML = `<div class="empty-state"><div class="icon">📋</div><p>Todavía no hiciste ningún simulacro.</p></div>`;
+      return;
+    }
+    el.innerHTML = `
+      <table class="history-table">
+        <thead><tr>
+          <th>Materia</th><th>Tema</th><th>Fecha</th>
+          <th>Resultado</th><th>Tiempo</th>
+        </tr></thead>
+        <tbody>
+          ${rows.map(r => {
+            const pct = r.porcentaje != null ? r.porcentaje : Math.round((r.score / r.total) * 100);
+            const cls = pct >= 70 ? 'high' : pct >= 50 ? 'mid' : 'low';
+            const fecha = new Date(r.fecha).toLocaleDateString('es-AR', { day:'2-digit', month:'2-digit', year:'2-digit', hour:'2-digit', minute:'2-digit' });
+            const tiempo = r.tiempo_segundos ? `${Math.floor(r.tiempo_segundos/60)}m ${r.tiempo_segundos%60}s` : '-';
+            return `<tr>
+              <td><strong>${r.materia}</strong></td>
+              <td>Tema ${r.tema}</td>
+              <td style="color:var(--text2)">${fecha}</td>
+              <td>${r.score}/${r.total} <span class="pct-chip ${cls}">${pct}%</span></td>
+              <td style="color:var(--text2)">${tiempo}</td>
+            </tr>`;
+          }).join('')}
+        </tbody>
+      </table>`;
+  } catch(e) {
+    el.innerHTML = `<div class="empty-state"><p>No se pudo cargar el historial.</p></div>`;
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════════════════════
+function startTimer() {
+  startTime = Date.now();
+  clearInterval(timerInterval);
+  timerInterval = setInterval(() => {
+    const s = Math.floor((Date.now() - startTime) / 1000);
+    const mm = String(Math.floor(s/60)).padStart(2,'0');
+    const ss = String(s % 60).padStart(2,'0');
+    const el = document.getElementById('timer');
+    if (el) el.textContent = `${mm}:${ss}`;
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+// ═══════════════════════════════════════════════════════
+// UTILS
+// ═══════════════════════════════════════════════════════
+function escHtml(s) {
+  if (!s) return '';
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function truncate(s, n) {
+  if (!s) return '';
+  return s.length > n ? s.slice(0, n) + '…' : s;
+}
+
+function formatQuestion(text) {
+  if (!text) return '';
+  // Highlight quoted text
+  return escHtml(text).replace(/"([^"]+)"/g, '<strong>"$1"</strong>');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
