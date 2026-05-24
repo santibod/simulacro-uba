@@ -112,6 +112,7 @@
   }
   .subject-card.ipc { border-top: 3px solid #6366f1; }
   .subject-card.icse { border-top: 3px solid #0ea5e9; }
+  .subject-card.analisis { border-top: 3px solid #10b981; }
   .card-badge {
     position: absolute;
     top: 14px; right: 14px;
@@ -602,6 +603,13 @@
         <div class="materia-name">Intro al Conocimiento de la Sociedad</div>
         <div class="materia-info">18 preguntas · Cátedra Pedrosa</div>
       </div>
+      <div class="subject-card analisis" onclick="selectSubject('ANALISIS')">
+        <div class="card-badge">4 exámenes</div>
+        <span class="icon">∫</span>
+        <div class="materia-code">A.M. · (66)</div>
+        <div class="materia-name">Análisis Matemático A</div>
+        <div class="materia-info">1-2 preg. MC · Cátedra Cabana</div>
+      </div>
     </div>
   </div>
 </div>
@@ -721,7 +729,7 @@ async function fetchHistory() {
 // ═══════════════════════════════════════════════════════
 // STATE
 // ═══════════════════════════════════════════════════════
-let currentSubject = null;  // 'IPC' | 'ICSE'
+let currentSubject = null;  // 'IPC' | 'ICSE' | 'ANALISIS'
 let currentTema = null;
 let questions = [];         // array of question objects
 let answers = {};           // { qIndex: answer }
@@ -752,12 +760,21 @@ function showHistory() {
 // ═══════════════════════════════════════════════════════
 // SUBJECT + TEMA SELECTION
 // ═══════════════════════════════════════════════════════
+function getSubjectData(subject) {
+  if (subject === 'IPC') return IPC_DATA;
+  if (subject === 'ICSE') return ICSE_DATA;
+  if (subject === 'ANALISIS') return ANALISIS_DATA;
+  return {};
+}
+
 function selectSubject(subject) {
   currentSubject = subject;
-  const data = subject === 'IPC' ? IPC_DATA : ICSE_DATA;
+  const data = getSubjectData(subject);
   const temas = Object.keys(data).map(Number).sort((a,b)=>a-b);
-  const qCount = subject === 'IPC' ? '10 ejercicios' : '18 preguntas';
-  const name = subject === 'IPC' ? 'Pensamiento Científico' : 'Sociedad y Estado';
+  const qCount = subject === 'IPC' ? '10 ejercicios' :
+                 subject === 'ICSE' ? '18 preguntas' : '1-2 preguntas MC';
+  const name = subject === 'IPC' ? 'Pensamiento Científico' :
+               subject === 'ICSE' ? 'Sociedad y Estado' : 'Análisis Matemático';
 
   document.getElementById('tema-title').textContent = name;
   document.getElementById('tema-sub').textContent = `Elegí un tema para practicar · ${qCount} por tema`;
@@ -774,7 +791,7 @@ function selectSubject(subject) {
 }
 
 function startRandomTema() {
-  const data = currentSubject === 'IPC' ? IPC_DATA : ICSE_DATA;
+  const data = getSubjectData(currentSubject);
   const temas = Object.keys(data).map(Number);
   const t = temas[Math.floor(Math.random() * temas.length)];
   startTema(t);
@@ -783,11 +800,13 @@ function startRandomTema() {
 function startTema(tema) {
   currentTema = tema;
   lastTema = tema;
-  const data = currentSubject === 'IPC' ? IPC_DATA : ICSE_DATA;
+  const data = getSubjectData(currentSubject);
   const temaData = data[String(tema)];
 
   if (currentSubject === 'IPC') {
     questions = buildIPCQuestions(temaData);
+  } else if (currentSubject === 'ANALISIS') {
+    questions = buildAnalisisQuestions(temaData);
   } else {
     questions = buildICSEQuestions(temaData);
   }
@@ -824,6 +843,13 @@ function buildICSEQuestions(temaData) {
   }));
 }
 
+function buildAnalisisQuestions(temaData) {
+  return temaData.questions.map(q => ({
+    type: 'analisis',
+    q
+  }));
+}
+
 // ═══════════════════════════════════════════════════════
 // EXAM RENDERING
 // ═══════════════════════════════════════════════════════
@@ -831,8 +857,10 @@ function renderExam() {
   const total = questions.length;
   const pct = ((currentQ + 1) / total) * 100;
 
+  const subjectLabel = currentSubject === 'ANALISIS' ? 'A.M.' : currentSubject;
+  const temaLabel = currentSubject === 'ANALISIS' ? 'Examen' : 'Tema';
   document.getElementById('exam-badge').textContent =
-    `${currentSubject} · Tema ${currentTema}`;
+    `${subjectLabel} · ${temaLabel} ${currentTema}`;
   document.getElementById('progress-bar').style.width = pct + '%';
   document.getElementById('q-counter').textContent =
     `Pregunta ${currentQ + 1} de ${total}`;
@@ -879,6 +907,8 @@ function renderQuestion(q) {
     area.innerHTML = renderIPCSingle(q.ex, 'q' + currentQ);
   } else if (q.type === 'ipc-compound') {
     area.innerHTML = renderIPCCompound(q.ex, 'q' + currentQ);
+  } else if (q.type === 'analisis') {
+    area.innerHTML = renderAnalisis(q.q, 'q' + currentQ);
   } else {
     area.innerHTML = renderICSE(q.q, 'q' + currentQ);
   }
@@ -965,6 +995,20 @@ function renderICSE(q, key) {
   const pts = q.num <= 16 ? '0,5 pts' : '1 pt';
   return `
     <div class="q-text">${formatQuestion(q.question)} <span style="color:var(--text2);font-size:13px">(${pts})</span></div>
+    <div class="options-grid">${opts}</div>
+  `;
+}
+
+function renderAnalisis(q, key) {
+  const opts = q.options.map(o => `
+    <button class="option-card" id="${key}_opt_${o.letter}" onclick="selectOption('${key}', '${o.letter}', this)">
+      <div class="opt-badge">${o.letter}</div>
+      <div class="opt-text">${escHtml(o.text)}</div>
+    </button>
+  `).join('');
+
+  return `
+    <div class="q-text">${formatQuestion(q.question)} <span style="color:var(--text2);font-size:13px">Ej. ${q.num}</span></div>
     <div class="options-grid">${opts}</div>
   `;
 }
@@ -1087,6 +1131,7 @@ function getCorrectAnswer(q, idx) {
     if (q.ex.num === 5) return { part_l: parts[0], part_ca: parts[1] };
   }
   if (q.type === 'icse') return q.q.correct;
+  if (q.type === 'analisis') return q.q.correct;
   return null;
 }
 
@@ -1115,7 +1160,7 @@ function applyCheckStyles(idx) {
   const correct = getCorrectAnswer(q, idx);
   const ans = answers[key];
 
-  if (q.type === 'ipc-single' || q.type === 'icse') {
+  if (q.type === 'ipc-single' || q.type === 'icse' || q.type === 'analisis') {
     document.querySelectorAll(`[id^="${key}_opt_"]`).forEach(btn => {
       btn.classList.add('disabled');
       const optVal = btn.id.split('_opt_')[1];
@@ -1202,6 +1247,10 @@ function showResults() {
         userAnsText = ans ? `L: ${ans.part_l || '?'} / CA: ${ans.part_ca || '?'}` : 'Sin responder';
         correctAnsText = `Correcta: L=${correctAns.part_l} / CA=${correctAns.part_ca}`;
       }
+    } else if (q.type === 'analisis') {
+      qText = `Ej. ${q.q.num}: ${truncate(q.q.question, 80)}`;
+      userAnsText = ans ? `Tu respuesta: ${ans}` : 'Sin responder';
+      correctAnsText = `Correcta: ${correctAns}`;
     } else {
       qText = `P. ${q.q.num}: ${truncate(q.q.question, 100)}`;
       userAnsText = ans ? `Tu respuesta: ${ans}` : 'Sin responder';

@@ -1,0 +1,183 @@
+{
+  "1": {
+    "tema": 1,
+    "questions": [
+      {
+        "num": 2,
+        "question": "Hallartodoslosvaloresdex ∈ Rparaloscualeslaserie esconvergente. 4n −1 n=1 4 4",
+        "options": [
+          {
+            "letter": "A",
+            "text": "x ∈ −√ ; √"
+          },
+          {
+            "letter": "B",
+            "text": "3 3"
+          },
+          {
+            "letter": "C",
+            "text": "x ∈ 3;4"
+          },
+          {
+            "letter": "D",
+            "text": "x ∈ ( 3;4)"
+          }
+        ],
+        "correct": "A"
+      },
+      {
+        "num": 6,
+        "question": "Para calcular el área encerrada por los gráficos de las funciones f(x) = x2 −x y    3x x ≥ 0 g(x) = se debe resolver:   −4x x < 0 ˆ 1 (g(x)−f(x))dx",
+        "options": [
+          {
+            "letter": "A",
+            "text": "−3 ˆ ˆ"
+          },
+          {
+            "letter": "B",
+            "text": "0 −3 ˆ"
+          },
+          {
+            "letter": "C",
+            "text": "(g(x)−f(x))dx −3"
+          },
+          {
+            "letter": "D",
+            "text": "0 −3"
+          }
+        ],
+        "correct": "C"
+      }
+    ]
+  },
+  "2": {
+    "tema": 2,
+    "questions": [
+      {
+        "num": 2,
+        "question": "Hallar todos los valores de x ∈ R para los cuales la serie ∞ 3n 1 · es convergente. 2n+1 (x+1)n n=1",
+        "options": [
+          {
+            "letter": "A",
+            "text": "x ∈ (−∞;−4]∪(2;+∞)"
+          },
+          {
+            "letter": "B",
+            "text": "x ∈ (−4;2)"
+          },
+          {
+            "letter": "C",
+            "text": "x ∈ (−∞;−4)∪(2;+∞)"
+          },
+          {
+            "letter": "D",
+            "text": "x ∈ [−4,2)"
+          }
+        ],
+        "correct": "A"
+      },
+      {
+        "num": 6,
+        "question": "Para calcular el área encerrada por los gráficos de las funciones f(x) = 4 y 20x g(x) = se debe resolver: x2 +4 ˆ ˆ 4 0 (g(x)−f(x))dx+ (f(x)−g(x))dx",
+        "options": [
+          {
+            "letter": "A",
+            "text": "0 1 ˆ ˆ"
+          },
+          {
+            "letter": "B",
+            "text": "0 1 ˆ"
+          },
+          {
+            "letter": "C",
+            "text": "1 ˆ"
+          },
+          {
+            "letter": "D",
+            "text": "(g(x)−f(x))dx 1"
+          }
+        ],
+        "correct": "D"
+      }
+    ]
+  },
+  "3": {
+    "tema": 3,
+    "questions": [
+      {
+        "num": 3,
+        "question": "El a´rea de la regio´n encerrada entre el gr´afico de f(x) = (4−x2).(e3x−1) y el eje x se obtiene calculando: 2",
+        "options": [
+          {
+            "letter": "A",
+            "text": "f(x)dx −2"
+          },
+          {
+            "letter": "B",
+            "text": "f(x)dx− f(x)dx 0 −2"
+          },
+          {
+            "letter": "C",
+            "text": "f(x)dx− f(x)dx −2 0"
+          },
+          {
+            "letter": "D",
+            "text": "(f(x)−x)dx −2"
+          }
+        ],
+        "correct": "B"
+      },
+      {
+        "num": 4,
+        "question": "Todos los valores de x ∈ R para los cuales la serie resulta convergente 6n2 +3 5 n=1 son:",
+        "options": [
+          {
+            "letter": "A",
+            "text": "[−1; 9]"
+          },
+          {
+            "letter": "B",
+            "text": "(−5; 5]"
+          },
+          {
+            "letter": "C",
+            "text": "[−5; 5)"
+          },
+          {
+            "letter": "D",
+            "text": "(−1; 9)"
+          }
+        ],
+        "correct": "D"
+      }
+    ]
+  },
+  "4": {
+    "tema": 4,
+    "questions": [
+      {
+        "num": 1,
+        "question": "Para hallar el a´rea de la regio´n comprendida entre los gr´aficos de x x f(x) = y g(x) = se debe calcular: x2 +2 x+14 4",
+        "options": [
+          {
+            "letter": "A",
+            "text": "(g(x)−f(x))dx −3"
+          },
+          {
+            "letter": "B",
+            "text": "(g(x)−f(x))dx+ (f(x)−g(x))dx −3 0"
+          },
+          {
+            "letter": "C",
+            "text": "(f(x)−g(x))dx+ (g(x)−f(x))dx −3 0"
+          },
+          {
+            "letter": "D",
+            "text": "(g(x)−f(x))dx+ (f(x)−g(x))dx −2 0"
+          }
+        ],
+        "correct": "B"
+      }
+    ]
+  }
+}
